@@ -1,8 +1,19 @@
-﻿@{
+﻿@model List<PhotoShare.Models.Photo>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h1>All Photos</h1>
+
+@foreach(var item in Model) 
+{    
+    <h2>@item.Title</h2>
+    <p>
+        @item.PhotoId<br />
+        @item.Description<br />
+        @item.CreatedAt<br />
+        @item.ImageFilename<br />
+        <a asp-controller="Home" asp-action="PhotoDetails" asp-route-id="@item.PhotoId">Display photo</a>
+     </p>
+}

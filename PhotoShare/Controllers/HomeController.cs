@@ -12,6 +12,7 @@ namespace PhotoShare.Controllers
         {            
         }
 
+        // Home page - display all photos
         public IActionResult Index()
         {
             // Create a list of photos
@@ -33,7 +34,7 @@ namespace PhotoShare.Controllers
             photo2.CreatedAt = DateTime.Now;
 
             Photo photo3 = new Photo();
-            photo3.PhotoId = 1;
+            photo3.PhotoId = 3;
             photo3.Title = "Photo 3";
             photo3.Description = "Description 3";
             photo3.ImageFilename = "photo3.jpg";
@@ -44,7 +45,21 @@ namespace PhotoShare.Controllers
             photos.Add(photo2);
             photos.Add(photo3);
 
-            return View();
+            return View(photos); // pass photo list to view
+        }
+
+        // Photo Details - display the details of a photo
+        public IActionResult PhotoDetails(int id)
+        {
+            // Create a photo
+            Photo photo = new Photo();
+            photo.PhotoId = id;
+            photo.Title = "Cat";
+            photo.Description = "This is my cat.";
+            photo.ImageFilename = "cat.jpg";
+            photo.CreatedAt = DateTime.Now;
+
+            return View(photo); // pass in photo to view
         }
 
         public IActionResult Privacy()
