@@ -15,8 +15,10 @@ namespace PhotoShare.Models
 
         public string ImageFilename { get; set; } = string.Empty;
 
+        [Display(Name ="Visible")]
         public bool IsVisible { get; set; } = false;
 
+        [Display(Name = "Created")]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         // Navigation property

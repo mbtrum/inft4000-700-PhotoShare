@@ -15,5 +15,6 @@ namespace PhotoShare.Data
         }
 
         public DbSet<PhotoShare.Models.Photo> Photo { get; set; } = default!;
+        public DbSet<PhotoShare.Models.Tag> Tag { get; set; } = default!;
     }
 }

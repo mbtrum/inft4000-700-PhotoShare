@@ -4,48 +4,57 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h1 class="mb-3">Edit Photo</h1>
 
-<h4>Photo</h4>
-<hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="PhotoId" />
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label"></label>
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Location" class="control-label"></label>
+            <div class="mb-3">
+                <label asp-for="Location" class="form-label"></label>
                 <input asp-for="Location" class="form-control" />
                 <span asp-validation-for="Location" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Camera" class="control-label"></label>
+            <div class="mb-3">
+                <label asp-for="Camera" class="form-label"></label>
                 <input asp-for="Camera" class="form-control" />
                 <span asp-validation-for="Camera" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="ImageFilename" class="control-label"></label>
+            <div class="mb-3">
+                <label asp-for="ImageFilename" class="form-label"></label>
                 <input asp-for="ImageFilename" class="form-control" />
                 <span asp-validation-for="ImageFilename" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
+            <div class="mb-3 form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="IsVisible" /> @Html.DisplayNameFor(model => model.IsVisible)
                 </label>
             </div>
-            <div class="form-group">
-                <label asp-for="CreatedAt" class="control-label"></label>
+            <div class="mb-3">
+                <label asp-for="CreatedAt" class="form-label"></label>
                 <input asp-for="CreatedAt" class="form-control" />
                 <span asp-validation-for="CreatedAt" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="mb-3">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
+            <div class="mb-3">
+                <a asp-controller="Tags" asp-action="Create" asp-route-id="@Model.PhotoId" class="me-2 btn btn-light">Add tag</a>
+                @if(Model.Tags != null)
+                {
+                    foreach (var tag in Model.Tags)
+                    {
+                        <span class="pe-2">@tag.Name <a asp-controller="Tags" asp-action="Delete" asp-route-id="@tag.TagId">x</a> </span>
+                    }
+                }
+            </div>
+
         </form>
     </div>
 </div>
