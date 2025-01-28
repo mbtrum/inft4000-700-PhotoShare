@@ -4,15 +4,22 @@
     ViewData["Title"] = "Home Page";
 }
 
-<h1>All Photos</h1>
+<h1 class="fw-bold">Resplash</h1>
 
-@foreach(var item in Model) 
-{    
-    <p>
-        @item.PhotoId<br />
-        @item.Description<br />
-        @item.CreatedAt<br />
-        @item.ImageFilename<br />
-        <a asp-controller="Home" asp-action="PhotoDetails" asp-route-id="@item.PhotoId">Display photo</a>
-     </p>
-}
+<div class="mb-4">
+    The internet’s source for visuals<br />
+    Powered by creators everywhere.
+</div>
+
+<div class="masonry-grid">
+    @foreach (var item in Model)
+    {
+        string imageUrl = Url.Content("/photos/" + item.ImageFilename);
+
+        <div class="masonry-grid-item">
+            <a href="@Url.Action("PhotoDetails", "Home", new { id = item.PhotoId })">
+                <img src="@imageUrl" class="img-fluid" alt="@item.Description" />
+            </a>
+        </div>
+    }
+</div>

@@ -57,12 +57,30 @@ namespace PhotoShare.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PhotoId,Description,Location,Camera,ImageFilename,IsVisible,CreatedAt")] Photo photo)
+        public async Task<IActionResult> Create([Bind("PhotoId,Description,Location,Camera,ImageFile,IsVisible")] Photo photo)
         {
+            // initialize the datetime property
+            photo.CreatedAt = DateTime.Now;
+
+            // rename the uploaded file to a guid (unique filename). Set before photo saved in database.
+            photo.ImageFilename = Guid.NewGuid().ToString() + Path.GetExtension(photo.ImageFile?.FileName);
+
             if (ModelState.IsValid)
             {
                 _context.Add(photo);
                 await _context.SaveChangesAsync();
+
+                // Save the uploaded file after the photo is saved in the database.
+                if (photo.ImageFile != null)
+                {
+                    string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "photos", photo.ImageFilename);
+
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await photo.ImageFile.CopyToAsync(fileStream);
+                    }
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             return View(photo);

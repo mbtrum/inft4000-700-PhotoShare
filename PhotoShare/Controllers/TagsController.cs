@@ -145,12 +145,18 @@ namespace PhotoShare.Controllers
             var tag = await _context.Tag
                 .Include(t => t.Photo)
                 .FirstOrDefaultAsync(m => m.TagId == id);
+
             if (tag == null)
             {
                 return NotFound();
             }
 
-            return View(tag);
+            // Remove tag from database
+            _context.Tag.Remove(tag);
+            await _context.SaveChangesAsync();
+
+            // re-direct back to photo edit page
+            return RedirectToAction("Edit", "Photos", new { id = tag.PhotoId });
         }
 
         // POST: Tags/Delete/5
