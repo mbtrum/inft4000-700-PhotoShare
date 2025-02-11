@@ -1,32 +1,34 @@
 ﻿@model PhotoShare.Models.Photo
-
+ 
 @{
-    ViewData["Title"] = Model.Description;
-}
+    ViewData["Title"] = "Photo details page";
 
-<table class="table">
-    <tr>
-        <td>
-            @Html.DisplayNameFor(model => model.PhotoId)
-        </td>
-        <td>
-            @Html.DisplayFor(model => model.PhotoId)
-        </td>
-    </tr>
-    <tr>
-        <td>
-            @Html.DisplayNameFor(model => model.Description)
-        </td>
-        <td>
-            @Html.DisplayFor(model => model.Description)
-        </td>
-    </tr>
-    <tr>
-        <td>
-            @Html.DisplayNameFor(model => model.CreatedAt)
-        </td>
-        <td>
-            @Html.DisplayFor(model => model.CreatedAt)
-        </td>
-    </tr>
-</table>
+    string imageUrl = Url.Content("/photos/" + Model.ImageFilename);
+}
+ 
+<div class="mb-3 w-50 mx-auto">
+    <img src="@imageUrl" class="img-fluid" alt="@Model.Description" />
+</div>
+
+<div class="mb-3">
+    <i class="fa-solid fa-location-dot"></i>
+    @Html.DisplayFor(model => model.Location)
+<br />
+    <i class="fa-solid fa-camera"></i>
+    @Html.DisplayFor(model => model.Camera)
+<br />
+    <i class="fa-solid fa-calendar"></i>
+    @Html.DisplayFor(model => model.CreatedAt)
+</div>
+
+<div class="mb-3">
+    @if (Model.Tags != null)
+    {
+        foreach (var tag in Model.Tags)
+        {
+            <span class="pe-3">@tag.Name </span>
+
+        }
+    }
+</div>
+ 

@@ -30,8 +30,8 @@ namespace PhotoShare.Controllers
         {
             // get photo by id
             var photo = await _context.Photo
+                .Include(m => m.Tags)
                 .FirstOrDefaultAsync(m => m.PhotoId == id);
-
 
             return View(photo); // pass in photo to view
         }

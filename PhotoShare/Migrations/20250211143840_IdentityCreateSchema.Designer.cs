@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PhotoShare.Data;
 
@@ -11,9 +12,11 @@ using PhotoShare.Data;
 namespace PhotoShare.Migrations
 {
     [DbContext(typeof(PhotoShareContext))]
-    partial class PhotoShareContextModelSnapshot : ModelSnapshot
+    [Migration("20250211143840_IdentityCreateSchema")]
+    partial class IdentityCreateSchema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
