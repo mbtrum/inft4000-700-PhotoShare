@@ -9,7 +9,7 @@ builder.Services.AddDbContext<PhotoShareContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("PhotoShareContext") ?? throw new InvalidOperationException("Connection string 'PhotoShareContext' not found.")));
 
 // Changed email required to false
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<PhotoShareContext>();
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<PhotoShareContext>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

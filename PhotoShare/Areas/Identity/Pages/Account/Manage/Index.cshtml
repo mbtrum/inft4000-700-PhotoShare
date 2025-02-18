@@ -5,21 +5,51 @@
     ViewData["ActivePage"] = ManageNavPages.Index;
 }
 
-<h3>@ViewData["Title"]</h3>
+<h3 class="mb-3">@ViewData["Title"]</h3>
 <partial name="_StatusMessage" for="StatusMessage" />
 <div class="row">
     <div class="col-md-6">
         <form id="profile-form" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Username" class="form-control" placeholder="Please choose your username." disabled />
+            
+            <div class="mb-3">
                 <label asp-for="Username" class="form-label"></label>
+                <input asp-for="Username" class="form-control" placeholder="Please choose your username." disabled />                
             </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Please enter your phone number."/>
-                <label asp-for="Input.PhoneNumber" class="form-label"></label>
-                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+
+            @* <div class="mb-3"> *@
+            @*     <label asp-for="Input.PhoneNumber" class="form-label"></label> *@
+            @*     <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Please enter your phone number."/>                 *@
+            @*     <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span> *@
+            @* </div> *@
+
+            @* BEGIN: ApplicationUser Custom Fields *@
+
+            <div class="mb-3">
+                <label asp-for="Input.Name" class="form-label"></label>
+                <input asp-for="Input.Name" class="form-control" />
+                <span asp-validation-for="Input.Name" class="text-danger"></span>
             </div>
+
+            <div class="mb-3">
+                <label asp-for="Input.Bio" class="form-label"></label>
+                <input asp-for="Input.Bio" class="form-control" />                
+                <span asp-validation-for="Input.Bio" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Input.Location" class="form-label"></label>
+                <input asp-for="Input.Location" class="form-control" />                
+                <span asp-validation-for="Input.Location" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <input asp-for="Input.IsForHire" class="form-check-input" /> Are you for Hire?                
+                <span asp-validation-for="Input.IsForHire" class="text-danger"></span>
+            </div>
+
+            @* END: ApplicationUser Custom Fields *@
+            
             <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
         </form>
     </div>

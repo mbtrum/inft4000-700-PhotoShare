@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,8 @@ using PhotoShare.Models;
 
 namespace PhotoShare.Controllers
 {
+    // Requires logged in user to access controller
+    [Authorize]
     public class TagsController : Controller
     {
         private readonly PhotoShareContext _context;
