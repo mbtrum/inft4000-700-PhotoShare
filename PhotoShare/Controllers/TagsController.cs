@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,10 +17,12 @@ namespace PhotoShare.Controllers
     public class TagsController : Controller
     {
         private readonly PhotoShareContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public TagsController(PhotoShareContext context)
+        public TagsController(PhotoShareContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // Removed the following action methods:
@@ -32,9 +35,21 @@ namespace PhotoShare.Controllers
 
         // GET: Tags/Create/5
         // id = PhotoId
-        public IActionResult Create(int? id)
+        public async Task<IActionResult> Create(int? id)
         {
             if (id == null)
+            {
+                return NotFound();
+            }
+
+            // Get ID of person logged in
+            var userId = _userManager.GetUserId(User);
+
+            var photo = await _context.Photo
+                .Where(m => m.ApplicationUserId == userId) // refine by user ID
+                .FirstOrDefaultAsync(m => m.PhotoId == id);
+
+            if (photo == null)
             {
                 return NotFound();
             }
@@ -52,6 +67,10 @@ namespace PhotoShare.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("TagId,Name,PhotoId")] Tag tag)
         {
+            //
+            // TO-DO: Get the photo and ensure logged in user is owner
+            //
+
             if (ModelState.IsValid)
             {
                 _context.Add(tag);
@@ -70,13 +89,17 @@ namespace PhotoShare.Controllers
         // GET: Tags/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            //
+            // TO-DO: Get the photo and ensure logged in user is owner
+            //
+
             if (id == null)
             {
                 return NotFound();
             }
 
             var tag = await _context.Tag
-                .Include(t => t.Photo)
+                .Include(t => t.Photo)               
                 .FirstOrDefaultAsync(m => m.TagId == id);
 
             if (tag == null)

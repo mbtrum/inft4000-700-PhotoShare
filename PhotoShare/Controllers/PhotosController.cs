@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,20 +17,27 @@ namespace PhotoShare.Controllers
     public class PhotosController : Controller
     {
         private readonly PhotoShareContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public PhotosController(PhotoShareContext context)
+        public PhotosController(PhotoShareContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // Removed the following action methods:
         // GET: Photos/Details/5
 
 
-        // GET: Photos
+        // GET: Photos by user ID
         public async Task<IActionResult> Index()
         {
-            var photos = await _context.Photo.ToListAsync();
+            // Get ID of person logged in
+            var userId = _userManager.GetUserId(User);
+
+            var photos = await _context.Photo
+                .Where(m => m.ApplicationUserId == userId) // refine by user ID
+                .ToListAsync();
 
             return View(photos);
         }
@@ -52,6 +60,10 @@ namespace PhotoShare.Controllers
 
             // rename the uploaded file to a guid (unique filename). Set before photo saved in database.
             photo.ImageFilename = Guid.NewGuid().ToString() + Path.GetExtension(photo.ImageFile?.FileName);
+
+            // Set the owner of the record for person logged in
+            var userId = _userManager.GetUserId(User);
+            photo.ApplicationUserId = userId;
 
             if (ModelState.IsValid)
             {
@@ -82,7 +94,13 @@ namespace PhotoShare.Controllers
                 return NotFound();
             }
 
-            var photo = await _context.Photo.Include("Tags").FirstOrDefaultAsync(m => m.PhotoId == id);
+            // Get ID of person logged in
+            var userId = _userManager.GetUserId(User);
+
+            var photo = await _context.Photo
+                .Include("Tags")
+                .Where(m => m.ApplicationUserId == userId) // refine by user ID
+                .FirstOrDefaultAsync(m => m.PhotoId == id);
 
             if (photo == null)
             {
@@ -97,7 +115,7 @@ namespace PhotoShare.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PhotoId,Description,Location,Camera,ImageFilename,IsVisible,CreatedAt")] Photo photo)
+        public async Task<IActionResult> Edit(int id, [Bind("PhotoId,Description,Location,Camera,ImageFilename,IsVisible,CreatedAt,ApplicationUserId")] Photo photo)
         {
             if (id != photo.PhotoId)
             {
@@ -135,8 +153,13 @@ namespace PhotoShare.Controllers
                 return NotFound();
             }
 
+            // Get ID of person logged in
+            var userId = _userManager.GetUserId(User);
+            
             var photo = await _context.Photo
+                .Where(m => m.ApplicationUserId == userId) // refine by user ID
                 .FirstOrDefaultAsync(m => m.PhotoId == id);
+
             if (photo == null)
             {
                 return NotFound();
@@ -150,13 +173,23 @@ namespace PhotoShare.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var photo = await _context.Photo.FindAsync(id);
-            if (photo != null)
+            // Get ID of person logged in
+            var userId = _userManager.GetUserId(User);
+
+            var photo = await _context.Photo
+                .Where(m => m.ApplicationUserId == userId) // refine by user ID
+                .FirstOrDefaultAsync(m => m.PhotoId == id);
+
+            if (photo == null)
+            {
+                return NotFound();
+            }
+            else
             {
                 _context.Photo.Remove(photo);
+                await _context.SaveChangesAsync();
             }
-
-            await _context.SaveChangesAsync();
+            
             return RedirectToAction(nameof(Index));
         }
 

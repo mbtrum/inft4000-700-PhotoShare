@@ -24,6 +24,7 @@
             <input type="hidden" asp-for="PhotoId" />
             <input type="hidden" asp-for="ImageFilename" />
             <input type="hidden" asp-for="CreatedAt" />
+            <input type="hidden" asp-for="ApplicationUserId" />
 
             <div class="mb-3">
                 <label asp-for="Description" class="form-label"></label>
@@ -59,7 +60,7 @@
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
             <div class="mb-3">
-                <a asp-controller="Tags" asp-action="Create" asp-route-id="@Model.PhotoId" class="me-2 btn btn-light">Add tag</a>
+                <a asp-controller="Tags" asp-action="Create" asp-route-id="@Model.PhotoId" class="me-2 btn btn-secondary">Add tag</a>
                 @if(Model.Tags != null)
                 {
                     foreach (var tag in Model.Tags)

@@ -5,7 +5,26 @@
 
     string imageUrl = Url.Content("/photos/" + Model.ImageFilename);
 }
- 
+
+@if (Model.ApplicationUser != null)
+{
+    <div class="d-flex">        
+            @if(!string.IsNullOrEmpty(Model.ApplicationUser.ImageFilename))
+            {
+            <div class="pe-2">
+                <img src="~/profile_img/@Model.ApplicationUser.ImageFilename" alt="@Model.ApplicationUser.Name" class="profile-thumb" />
+            </div>
+            }
+        <div>
+            @Model.ApplicationUser.Name<br />
+            @if(Model.ApplicationUser.IsForHire == true)
+            {
+                <span class="text-primary" style="font-size:0.9em;">Available for hire <i class="fa-solid fa-circle-check"></i></span>
+            }
+        </div>
+    </div>
+}
+
 <div class="mb-3 w-50 mx-auto">
     <img src="@imageUrl" class="img-fluid" alt="@Model.Description" />
 </div>
