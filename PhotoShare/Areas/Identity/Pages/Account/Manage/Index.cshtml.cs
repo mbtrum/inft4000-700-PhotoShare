@@ -68,6 +68,11 @@ namespace PhotoShare.Areas.Identity.Pages.Account.Manage
             [Display(Name = "For Hire")]
             public bool IsForHire { get; set; }
 
+            public string ImageFilename { get; set; }
+
+            [Display(Name = "Change Profile Picture")]
+            public IFormFile ImageFile { get; set; }
+
             /////////////////////////////////////
             // END: ApplicationUser Custom Fields
             /////////////////////////////////////
@@ -97,6 +102,7 @@ namespace PhotoShare.Areas.Identity.Pages.Account.Manage
                 Bio = user.Bio,
                 Location = user.Location,
                 IsForHire = user.IsForHire,
+                ImageFilename = user.ImageFilename,
                 ///////////////////////////////////////
                 // END: ApplicationUser Custom Fields
                 ///////////////////////////////////////
@@ -163,6 +169,21 @@ namespace PhotoShare.Areas.Identity.Pages.Account.Manage
             if (Input.IsForHire != user.IsForHire)
             {
                 user.IsForHire = Input.IsForHire;
+            }
+
+            // Update the profile picture                
+            if (Input.ImageFile != null)
+            {
+                string imageFilename = Guid.NewGuid().ToString() + Path.GetExtension(Input.ImageFile.FileName);
+
+                string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "profile_img", imageFilename);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await Input.ImageFile.CopyToAsync(fileStream);
+                }
+
+                user.ImageFilename = imageFilename;
             }
 
             await _userManager.UpdateAsync(user);
